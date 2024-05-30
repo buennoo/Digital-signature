@@ -1,0 +1,16 @@
+.keys-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    height: 90px;
+    max-height: 90px;
+    background-color: aqua;
+    align-items: center;
+}
+
+.generate-buttons{
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    gap: 10px;
+}

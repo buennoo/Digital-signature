@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import KeyLabel from './components/KeyLabel';
-import InputField from './components/InputField';
+import Header from './components/Header';
+import MainContainer from './components/MainContainer';
 
 
 function App() {
   return (
     <div className="App">
-        <KeyLabel />
-        <InputField />
+      <Header/>
+      <MainContainer/>
     </div>
   );
 }
