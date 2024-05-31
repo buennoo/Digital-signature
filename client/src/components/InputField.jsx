@@ -40,7 +40,6 @@ function InputField({ returnPublicKey }){
       if(returnPublicKey){
         returnPublicKey(encryptedFile.public_key)
       }
-
     }   
   }, [encryptedFile, returnPublicKey]);
 

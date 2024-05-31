@@ -6,11 +6,14 @@ import asyncio
 import binascii
 from Crypto.Hash import SHA3_256
 from Crypto.Signature import pkcs1_15
-from Crypto.PublicKey import RSA
+import os
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 cros = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['RES_FOLDER'] = 'res'
 
 @app.route("/hello", methods=['GET'])
 @cross_origin()
@@ -48,6 +51,7 @@ def publickey():
 #         else:
 #             raise
 
+
 @app.route('/encrypt', methods=['POST'])
 async def encrypt():
     try:
@@ -66,7 +70,24 @@ async def encrypt():
 
         public_key_pem = public_key.export_key().decode('ascii')
 
+        # Save file + signature on server
+        filename = secure_filename(request.files['file'].filename)
+        res_folder = app.config['RES_FOLDER']
+        if not os.path.exists(res_folder):
+            os.makedirs(res_folder)
+        encrypted_file_path = os.path.join(res_folder, 'signed_' + filename)
+        signature_file_path = os.path.join(res_folder, filename + '.sign')
+
+        with open(encrypted_file_path, 'wb') as f:
+            f.write(file)
+            f.write(b'\nPublic Key:\n')
+            f.write(public_key_pem.encode())
+
+        with open(signature_file_path, 'wb') as f:
+            f.write(signature)
+
         return jsonify({
+            'filename': filename,
             'signature': binascii.hexlify(signature).decode('ascii'),
             'public_key': public_key_pem
         })
