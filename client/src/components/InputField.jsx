@@ -37,9 +37,12 @@ function InputField({ returnPublicKey }){
     if (encryptedFile && encryptedFile.public_key) {
       setPublicKey(encryptedFile.public_key);
       console.log('Public Key:', encryptedFile.public_key);
-      returnPublicKey(encryptedFile.public_key);
+      if(returnPublicKey){
+        returnPublicKey(encryptedFile.public_key)
+      }
+
     }   
-  }, [encryptedFile]);
+  }, [encryptedFile, returnPublicKey]);
 
   return (
     <div>

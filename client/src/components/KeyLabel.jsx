@@ -1,7 +1,7 @@
 import '../styles/KeyLabel.css';
 import React, { useState, useEffect } from 'react';
 
-function KeyLabel({ setFetchKey, onKeyGenerated }){
+function KeyLabel({ setFetchKey, generatedKey }){
   const [key, setKey] = useState("No key generated yet.");
   const [loading, setLoading] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -17,7 +17,6 @@ function KeyLabel({ setFetchKey, onKeyGenerated }){
         const data = await res.json();
         console.log("Received public key:", data.public_key);
         setKey(data.public_key);
-        onKeyGenerated(data.public_key);
     } catch (error) {
         console.error("Error fetching public key:", error);
         setKey("Error fetching key");
@@ -37,7 +36,6 @@ function KeyLabel({ setFetchKey, onKeyGenerated }){
         const data = await res.json();
         console.log("Received public key:", data.private_key);
         setKey(data.private_key);
-        onKeyGenerated(data.private_key);
     } catch (error) {
         console.error("Error fetching public key:", error);
         setKey("Error fetching key");
@@ -58,6 +56,10 @@ function KeyLabel({ setFetchKey, onKeyGenerated }){
       });
   }, [setFetchKey]);
 
+  useEffect(() => {
+    setKey(generatedKey);
+    console.log("passing last:", generatedKey);
+  }, [generatedKey]);
 
     return (
       <div className='key-container'>
@@ -65,7 +67,7 @@ function KeyLabel({ setFetchKey, onKeyGenerated }){
           Public Key:
       </div>
       <div>
-          {isButtonClicked ? (
+          {isButtonClicked || generatedKey  ? (
               loading ? (
                   <div className='loading-spinner'></div>
               ) : (

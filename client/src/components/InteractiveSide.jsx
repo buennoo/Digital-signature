@@ -1,10 +1,12 @@
 import '../styles/InteractiveSide.css';
 import InputField from './InputField';
 
-function InteractiveSide({ returnPublicKey }) {
+function InteractiveSide({ getPublicKey }) {
+
+    
     return (
         <section className="down-container">
-            <InputField publicKey={ returnPublicKey } />
+            <InputField returnPublicKey={ getPublicKey } />
         </section>
     );
 }
