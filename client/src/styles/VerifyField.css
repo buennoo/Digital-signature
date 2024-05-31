@@ -1,0 +1,54 @@
+.send-file-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 50%;
+  width: 50%;
+}
+
+.file-input {
+  margin-bottom: 20px;
+}
+
+.file-input label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.file-input input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.submit-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 10em;
+}
+
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.textarea-container {
+  margin-top: 5px;
+  width: 100%;
+}
+
+
+.public-key-input {
+  margin-bottom: 20px;
+}
+
+.public-key-input label {
+  display: block;
+  margin-bottom: 5px;
+}
+

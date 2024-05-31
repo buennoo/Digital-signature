@@ -1,14 +1,30 @@
 import '../styles/KeysContainer.css';
 import KeyLabel from './KeyLabel';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function KeysContainer({ generatedKey }) {
     const [fetchKey, setFetchKey] = useState(null);
-    const [publicKey, setPublicKey] = useState('')
 
     const handleGenerateKey = (keyType) => {
         if (fetchKey) {
             fetchKey(keyType);
+        }
+    };
+
+    const handleDownload = async () => {
+        try {
+            const response = await axios.get('/download-folder', {
+                responseType: 'blob' // ważne dla odpowiedzi binarnej
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'res.zip'); // nazwa pliku ZIP
+            document.body.appendChild(link);
+            link.click();
+        } catch (error) {
+            console.error('Błąd pobierania folderu:', error);
         }
     };
 
@@ -18,8 +34,8 @@ function KeysContainer({ generatedKey }) {
                 <button onClick={() => handleGenerateKey('Public')}>
                     Generate Public Key
                 </button>
-                <button onClick={() => handleGenerateKey('Private')}>
-                    Generate Private Key
+                <button onClick={() => handleDownload()}>
+                    Download files
                 </button>
             </div>
             <KeyLabel setFetchKey={setFetchKey} generatedKey={generatedKey} />

@@ -49,7 +49,7 @@ function KeyLabel({ setFetchKey, generatedKey }){
           if (keyType === 'Public') {
               fetchPublicKey();
           }
-          if (keyType == 'Private'){
+          if (keyType === 'Private'){
               fetchPrivateKey();
           }
 

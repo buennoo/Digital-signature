@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS, cross_origin
 from RSAkeyPairs import generate_keypair
 from fileEncrypt import encrypt_file as encrypt_uploaded_file
@@ -8,6 +8,7 @@ from Crypto.Hash import SHA3_256
 from Crypto.Signature import pkcs1_15
 import os
 from werkzeug.utils import secure_filename
+import shutil
 
 
 app = Flask(__name__)
@@ -91,6 +92,16 @@ async def encrypt():
             'signature': binascii.hexlify(signature).decode('ascii'),
             'public_key': public_key_pem
         })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/download-folder', methods=['GET'])
+def download_folder():
+    try:
+        res_folder = app.config['RES_FOLDER']
+        zip_file_path = os.path.join(res_folder, 'res_files.zip')
+        shutil.make_archive(os.path.splitext(zip_file_path)[0], 'zip', res_folder)
+        return send_file(zip_file_path, as_attachment=True)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
