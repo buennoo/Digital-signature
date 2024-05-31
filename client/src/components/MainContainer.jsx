@@ -8,8 +8,8 @@ function MainContainer() {
 
     return (
         <section className="main-container">
-            <KeysContainer setPublicKey={setPublicKey} />
-            <InteractiveSide publicKey={publicKey} />
+            <KeysContainer getPublicKey={publicKey} />
+            <InteractiveSide setPublicKey={returnPublicKey} />
         </section>
     );
 }

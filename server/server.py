@@ -3,6 +3,10 @@ from flask_cors import CORS, cross_origin
 from RSAkeyPairs import generate_keypair
 from fileEncrypt import encrypt_file as encrypt_uploaded_file
 import asyncio
+import binascii
+from Crypto.Hash import SHA3_256
+from Crypto.Signature import pkcs1_15
+from Crypto.PublicKey import RSA
 
 app = Flask(__name__)
 cros = CORS(app)
@@ -27,8 +31,8 @@ def publickey():
             raise
 
     result = loop.run_until_complete(generate_keypair())
-    public_key = result.publickey().export_key().decode().splitlines()
-    public_key = "\n".join(public_key[1:-1])
+    public_key = result.publickey().export_key().decode() #.splitlines()
+    # public_key = "\n".join(public_key[1:-1])
     return jsonify({"public_key": public_key})
 
 # @app.route("/privatekey", methods=['GET'])
@@ -45,15 +49,29 @@ def publickey():
 #             raise
 
 @app.route('/encrypt', methods=['POST'])
-@cross_origin()
-def encrypt_file():
-    if 'file' not in request.files or 'public_key' not in request.form:
-        return jsonify({'error': 'Missing file or public key'}), 400
+async def encrypt():
+    try:
+        if 'file' not in request.files:
+            return jsonify({'error': 'Missing file'}), 400
 
-    file = request.files['file']
-    public_key_str = request.form['public_key']
-    encrypted_file = encrypt_uploaded_file(file, public_key_str)
-    return jsonify({'encrypted_file': encrypted_file})
+        file = request.files['file'].read()
+        rsa_key = await generate_keypair()
+
+        private_key = rsa_key
+        public_key = rsa_key.publickey()
+
+        hashed = SHA3_256.new(file)
+        signer = pkcs1_15.new(private_key)
+        signature = signer.sign(hashed)
+
+        public_key_pem = public_key.export_key().decode('ascii')
+
+        return jsonify({
+            'signature': binascii.hexlify(signature).decode('ascii'),
+            'public_key': public_key_pem
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 if __name__ == "__main__":

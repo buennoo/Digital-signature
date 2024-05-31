@@ -2,7 +2,7 @@ import '../styles/KeysContainer.css';
 import KeyLabel from './KeyLabel';
 import React, { useState } from 'react';
 
-function KeysContainer({ setPublicKey }) {
+function KeysContainer({ getPublicKey }) {
     const [fetchKey, setFetchKey] = useState(null);
 
     const handleGenerateKey = (keyType) => {
@@ -12,7 +12,7 @@ function KeysContainer({ setPublicKey }) {
     };
 
     const handleKeyGenerated = (generatedKey) => {
-        setPublicKey(generatedKey);
+        getPublicKey(generatedKey);
     };
 
     return (

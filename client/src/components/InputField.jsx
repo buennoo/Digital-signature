@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/InputField.css';
 
 
-function InputField({ publicKey }){
+function InputField({ returnPublicKey }){
   const [fileName, setFileName] = useState('No file uploaded yet.');
   const [encryptedFile, setEncryptedFile] = useState('');
+  const [publicKey, setPublicKey] = useState('');
 
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
@@ -22,13 +23,23 @@ function InputField({ publicKey }){
         body: formData,
       });
 
+      console.log('Response from server:', encryptResponse);
+
       const encryptData = await encryptResponse.json();
-      setEncryptedFile(encryptData.encrypted_file);
+      setEncryptedFile(encryptData);
     } else {
       setFileName('');
       setEncryptedFile('');
     }
   };
+
+  useEffect(() =>{
+    if (encryptedFile && encryptedFile.public_key) {
+      setPublicKey(encryptedFile.public_key);
+      console.log('Public Key:', encryptedFile.public_key);
+      returnPublicKey(encryptedFile.public_key);
+    }   
+  }, [encryptedFile]);
 
   return (
     <div>
@@ -43,12 +54,6 @@ function InputField({ publicKey }){
           </div>
         </label>
       </form>
-      {encryptedFile && (
-        <div>
-          <h3>Encrypted File:</h3>
-          <textarea readOnly value={encryptedFile} rows="10" cols="50"></textarea>
-        </div>
-      )}
     </div>
   );
 }
