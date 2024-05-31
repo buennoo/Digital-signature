@@ -69,6 +69,8 @@ async def encrypt():
         hashed = SHA3_256.new(file)
         signer = pkcs1_15.new(private_key)
         signature = signer.sign(hashed)
+
+        print('----------')
         print(binascii.hexlify(signature).decode('ascii'))
 
         public_key_pem = public_key.export_key().decode('ascii')
@@ -83,8 +85,8 @@ async def encrypt():
 
         with open(encrypted_file_path, 'wb') as f:
             f.write(file)
-            f.write(b'\nPublic Key:\n')
-            f.write(public_key_pem.encode())
+            # f.write(b'\nPublic Key:\n')
+            # f.write(public_key_pem.encode())
 
         with open(signature_file_path, 'wb') as f:
             f.write(signature)
@@ -125,9 +127,14 @@ def verify_signature():
         hashed = SHA3_256.new(file1)
         print('5')
 
-        if(pkcs1_15.new(public_key).verify(hashed, file2)):
-            print('asdas')
+        # if(pkcs1_15.new(public_key).verify(hashed, file2)):
+        #     print('asdas')
+        #     return jsonify({'verified': True})
+        try:
+            pkcs1_15.new(public_key).verify(hashed, file2)
             return jsonify({'verified': True})
+        except (ValueError, TypeError):
+            return jsonify({'verified': False})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
