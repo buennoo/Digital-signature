@@ -1,5 +1,4 @@
 from Crypto.PublicKey import RSA
-
 from imgTrng import TRNG
 
 async def generate_keypair(bits=2048):

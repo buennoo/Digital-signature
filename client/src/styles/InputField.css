@@ -35,3 +35,12 @@
 .upload-button:hover {
   text-decoration-line: underline;
 }
+
+.title-file {
+  text-align: center;
+}
+
+.input-field {
+  width: fit-content;
+  max-width: 50%;
+}

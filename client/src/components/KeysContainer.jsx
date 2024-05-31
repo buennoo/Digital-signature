@@ -2,13 +2,17 @@ import '../styles/KeysContainer.css';
 import KeyLabel from './KeyLabel';
 import React, { useState } from 'react';
 
-function KeysContainer(){
+function KeysContainer({ setPublicKey }) {
     const [fetchKey, setFetchKey] = useState(null);
 
     const handleGenerateKey = (keyType) => {
         if (fetchKey) {
             fetchKey(keyType);
         }
+    };
+
+    const handleKeyGenerated = (generatedKey) => {
+        setPublicKey(generatedKey);
     };
 
     return (
@@ -21,7 +25,7 @@ function KeysContainer(){
                     Generate Private Key
                 </button>
             </div>
-            <KeyLabel setFetchKey={setFetchKey} />
+            <KeyLabel setFetchKey={setFetchKey} onKeyGenerated={handleKeyGenerated} />
         </section>
     );
 }

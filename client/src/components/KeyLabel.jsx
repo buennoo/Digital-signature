@@ -1,7 +1,7 @@
 import '../styles/KeyLabel.css';
 import React, { useState, useEffect } from 'react';
 
-function KeyLabel({ setFetchKey }){
+function KeyLabel({ setFetchKey, onKeyGenerated }){
   const [key, setKey] = useState("No key generated yet.");
   const [loading, setLoading] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -17,6 +17,7 @@ function KeyLabel({ setFetchKey }){
         const data = await res.json();
         console.log("Received public key:", data.public_key);
         setKey(data.public_key);
+        onKeyGenerated(data.public_key);
     } catch (error) {
         console.error("Error fetching public key:", error);
         setKey("Error fetching key");
@@ -36,6 +37,7 @@ function KeyLabel({ setFetchKey }){
         const data = await res.json();
         console.log("Received public key:", data.private_key);
         setKey(data.private_key);
+        onKeyGenerated(data.private_key);
     } catch (error) {
         console.error("Error fetching public key:", error);
         setKey("Error fetching key");

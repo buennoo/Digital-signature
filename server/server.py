@@ -1,20 +1,19 @@
-from flask import Flask
-from flask import jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from RSAkeyPairs import generate_keypair
+from fileEncrypt import encrypt_file as encrypt_uploaded_file
 import asyncio
-#from test import testing
 
 app = Flask(__name__)
 cros = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route("/hello")
+@app.route("/hello", methods=['GET'])
 @cross_origin()
 def hello():
     return {"hello": ["test", "flask"]}
 
-@app.route("/publickey")
+@app.route("/publickey", methods=['GET'])
 @cross_origin()
 def publickey():
     print("public key")
@@ -32,7 +31,7 @@ def publickey():
     public_key = "\n".join(public_key[1:-1])
     return jsonify({"public_key": public_key})
 
-# @app.route("/privatekey")
+# @app.route("/privatekey", methods=['GET'])
 # @cross_origin()
 # def privatekey():
 #     print("private key")
@@ -45,10 +44,16 @@ def publickey():
 #         else:
 #             raise
 
-    result = loop.run_until_complete(generate_keypair())
-    private_key = result.export_key().decode().splitlines()
-    private_key = "\n".join(private_key[1:-1])
-    return jsonify({"private_key" : private_key})
+@app.route('/encrypt', methods=['POST'])
+@cross_origin()
+def encrypt_file():
+    if 'file' not in request.files or 'public_key' not in request.form:
+        return jsonify({'error': 'Missing file or public key'}), 400
+
+    file = request.files['file']
+    public_key_str = request.form['public_key']
+    encrypted_file = encrypt_uploaded_file(file, public_key_str)
+    return jsonify({'encrypted_file': encrypted_file})
 
 
 if __name__ == "__main__":
