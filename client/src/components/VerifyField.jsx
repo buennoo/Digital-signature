@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/VerifyField.css';
+import { RxCheck } from "react-icons/rx";
+import { RxCross2 } from "react-icons/rx";
 
 function SendField() {
   const [file1, setFile1] = useState(null);
@@ -50,12 +52,16 @@ function SendField() {
           <textarea id="publicKey" value={publicKey} onChange={handlePublicKeyChange} rows="1" />
         </div>
       </div>
-      <button className="submit-button" disabled={!file1 || !file2 || !publicKey} onClick={handleVerify}>
-        Verify
-      </button>
-      {verificationResult !== null && (
-        <div>{verificationResult ? 'Signature verified' : 'Signature does not match'}</div>
-      )}
+      <div className='check'>
+        <button className="submit-button" disabled={!file1 || !file2 || !publicKey} onClick={handleVerify}>
+          Verify
+        </button>
+        <div>
+          {verificationResult !== null && (
+            <div>{verificationResult ? <RxCheck/> : <RxCross2 />}</div>
+          )}
+        </div>
+        </div>
     </div>
   );
 }

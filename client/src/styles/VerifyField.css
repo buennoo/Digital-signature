@@ -60,3 +60,10 @@
   margin-bottom: 5px;
 }
 
+.check {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 10px;
+}
+
