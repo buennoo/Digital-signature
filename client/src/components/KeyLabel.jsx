@@ -71,7 +71,7 @@ function KeyLabel({ setFetchKey, generatedKey }){
               loading ? (
                   <div className='loading-spinner'></div>
               ) : (
-                  <textarea
+                  <textarea id="public-key-text"
                       value={key}
                       readOnly
                       rows={2}

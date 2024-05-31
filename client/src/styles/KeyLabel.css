@@ -3,6 +3,8 @@
     max-width: 30%;
     height: 100%;
     max-height: 100%;
+
+    border: 1px solid whitesmoke;
 }
 
 .title-key-container{
@@ -27,4 +29,8 @@
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+#public-key-text {
+    max-width: 90%;
 }

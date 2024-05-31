@@ -44,7 +44,7 @@ function InputField({ returnPublicKey }){
   }, [encryptedFile, returnPublicKey]);
 
   return (
-    <div>
+    <div className='input-field-main'>
       {/* {publicKey && <h3>{publicKey}</h3>} */}
       {fileName && <h3>{fileName}</h3>}
       <form id="form-file-upload">

@@ -31,10 +31,10 @@ function KeysContainer({ generatedKey }) {
     return (
         <section className='keys-container'>
             <div className='generate-buttons'>
-                <button onClick={() => handleGenerateKey('Public')}>
+                <button className="submit-button" onClick={() => handleGenerateKey('Public')}>
                     Generate Public Key
                 </button>
-                <button onClick={() => handleDownload()}>
+                <button className="submit-button" onClick={() => handleDownload()}>
                     Download files
                 </button>
             </div>
