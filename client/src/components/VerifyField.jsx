@@ -5,6 +5,7 @@ function SendField() {
   const [file1, setFile1] = useState(null);
   const [file2, setFile2] = useState(null);
   const [publicKey, setPublicKey] = useState('');
+  const [verificationResult, setVerificationResult] = useState(null);
 
   function handleFile1Change(e) {
     setFile1(e.target.files[0]);
@@ -16,6 +17,21 @@ function SendField() {
 
   function handlePublicKeyChange(e) {
     setPublicKey(e.target.value);
+  }
+
+  async function handleVerify() {
+    const formData = new FormData();
+    formData.append('file1', file1);
+    formData.append('file2', file2);
+    formData.append('publicKey', publicKey);
+
+    const response = await fetch('/verify', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    setVerificationResult(data.verified);
   }
 
   return (
@@ -34,9 +50,12 @@ function SendField() {
           <textarea id="publicKey" value={publicKey} onChange={handlePublicKeyChange} rows="1" />
         </div>
       </div>
-      <button className="submit-button" disabled={!file1 || !file2}>
+      <button className="submit-button" disabled={!file1 || !file2 || !publicKey} onClick={handleVerify}>
         Verify
       </button>
+      {verificationResult !== null && (
+        <div>{verificationResult ? 'Signature verified' : 'Signature does not match'}</div>
+      )}
     </div>
   );
 }

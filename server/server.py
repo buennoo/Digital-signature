@@ -9,6 +9,7 @@ from Crypto.Signature import pkcs1_15
 import os
 from werkzeug.utils import secure_filename
 import shutil
+from Crypto.PublicKey import RSA
 
 
 app = Flask(__name__)
@@ -68,6 +69,7 @@ async def encrypt():
         hashed = SHA3_256.new(file)
         signer = pkcs1_15.new(private_key)
         signature = signer.sign(hashed)
+        print(binascii.hexlify(signature).decode('ascii'))
 
         public_key_pem = public_key.export_key().decode('ascii')
 
@@ -77,7 +79,7 @@ async def encrypt():
         if not os.path.exists(res_folder):
             os.makedirs(res_folder)
         encrypted_file_path = os.path.join(res_folder, 'signed_' + filename)
-        signature_file_path = os.path.join(res_folder, filename + '.sign')
+        signature_file_path = os.path.join(res_folder, filename + '.sig')
 
         with open(encrypted_file_path, 'wb') as f:
             f.write(file)
@@ -105,6 +107,29 @@ def download_folder():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+
+@app.route('/verify', methods=['POST'])
+def verify_signature():
+    try:
+        if 'file1' not in request.files or 'file2' not in request.files or 'publicKey' not in request.form:
+            return jsonify({'error': 'Missing file or public key'}), 400
+
+        file1 = request.files['file1'].read()
+        file2 = request.files['file2'].read()
+        print('2')
+        public_key_pem = request.form['publicKey']
+        print('3')
+
+        public_key = RSA.import_key(public_key_pem)
+        print('4')
+        hashed = SHA3_256.new(file1)
+        print('5')
+
+        if(pkcs1_15.new(public_key).verify(hashed, file2)):
+            print('asdas')
+            return jsonify({'verified': True})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     app.run()
