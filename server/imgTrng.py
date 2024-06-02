@@ -8,7 +8,7 @@ class TRNG:
         #print(size)
         if len(self.byteStream)<size:
              
-            path = 'thechild.jpg'
+            path = 'images/thechild.jpg'
 
             with open(path, 'rb') as f:
                 image_data = f.read()
