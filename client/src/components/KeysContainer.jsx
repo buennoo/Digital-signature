@@ -3,7 +3,7 @@ import KeyLabel from './KeyLabel';
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function KeysContainer({ generatedKey }) {
+function KeysContainer({ generatedKey, generatedLoad }) {
     const [fetchKey, setFetchKey] = useState(null);
 
     const handleGenerateKey = (keyType) => {
@@ -38,7 +38,7 @@ function KeysContainer({ generatedKey }) {
                     Download files
                 </button>
             </div>
-            <KeyLabel setFetchKey={setFetchKey} generatedKey={generatedKey} />
+            <KeyLabel setFetchKey={setFetchKey} generatedKey={generatedKey} generatedLoad={generatedLoad} />
         </section>
     );
 }

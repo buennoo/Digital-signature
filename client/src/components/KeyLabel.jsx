@@ -1,7 +1,7 @@
 import '../styles/KeyLabel.css';
 import React, { useState, useEffect } from 'react';
 
-function KeyLabel({ setFetchKey, generatedKey }){
+function KeyLabel({ setFetchKey, generatedKey, generatedLoad }){
   const [key, setKey] = useState("No key generated yet.");
   const [loading, setLoading] = useState(false);
   const [isButtonClicked, setIsButtonClicked] = useState(false);
@@ -60,6 +60,11 @@ function KeyLabel({ setFetchKey, generatedKey }){
     setKey(generatedKey);
     console.log("passing last:", generatedKey);
   }, [generatedKey]);
+
+  useEffect(() => {
+    setLoading(generatedLoad);
+    console.log("passing loading:", generatedLoad);
+  }, [generatedLoad]);
 
     return (
       <div className='key-container'>

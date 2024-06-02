@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/VerifyField.css';
+import '../styles/SendField.css';
 import { RxCheck } from "react-icons/rx";
 import { RxCross2 } from "react-icons/rx";
 

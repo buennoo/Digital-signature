@@ -1,12 +1,12 @@
 import '../styles/InteractiveSide.css';
 import InputField from './InputField';
-import SendField from './VerifyField';
+import SendField from './SendField';
 
-function InteractiveSide({ getPublicKey }) {
+function InteractiveSide({ getPublicKey, getLoading }) {
 
     return (
         <section className="down-container">
-            <InputField returnPublicKey={ getPublicKey } />
+            <InputField returnPublicKey={ getPublicKey } returnLoading= { getLoading } />
             <SendField />
         </section>
     );

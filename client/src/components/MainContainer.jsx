@@ -5,16 +5,21 @@ import React, { useState } from 'react';
 
 function MainContainer() {
     const [publicKey, setPublicKey] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const setThisKey = (newKey) => {
         // console.log("passing:",publicKey);
         setPublicKey(newKey);
     }
 
+    const setLoadingStart = (startLoad) => {
+        setLoading(startLoad);
+    }
+
     return (
         <section className="main-container">
-            <KeysContainer generatedKey={publicKey} />
-            <InteractiveSide getPublicKey={setThisKey} />
+            <KeysContainer generatedKey={publicKey} generatedLoad={loading}/>
+            <InteractiveSide getPublicKey={setThisKey} getLoading={setLoadingStart}/>
         </section>
     );
 }
