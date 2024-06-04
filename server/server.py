@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS, cross_origin
 from RSAkeyPairs import generate_keypair
-from fileEncrypt import encrypt_file as encrypt_uploaded_file
 import asyncio
 import binascii
 from Crypto.Hash import SHA3_256
@@ -17,10 +16,10 @@ cros = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['RES_FOLDER'] = 'res'
 
-@app.route("/hello", methods=['GET'])
-@cross_origin()
-def hello():
-    return {"hello": ["test", "flask"]}
+# @app.route("/hello", methods=['GET'])
+# @cross_origin()
+# def hello():
+#     return {"hello": ["test", "flask"]}
 
 @app.route("/publickey", methods=['GET'])
 @cross_origin()
@@ -53,7 +52,6 @@ def publickey():
 #         else:
 #             raise
 
-
 @app.route('/encrypt', methods=['POST'])
 async def encrypt():
     try:
@@ -70,8 +68,8 @@ async def encrypt():
         signer = pkcs1_15.new(private_key)
         signature = signer.sign(hashed)
 
-        print('----------')
-        print(binascii.hexlify(signature).decode('ascii'))
+        # print('----------')
+        # print(binascii.hexlify(signature).decode('ascii'))
 
         public_key_pem = public_key.export_key().decode('ascii')
 
@@ -81,7 +79,7 @@ async def encrypt():
         if not os.path.exists(res_folder):
             os.makedirs(res_folder)
         encrypted_file_path = os.path.join(res_folder, 'signed_' + filename)
-        signature_file_path = os.path.join(res_folder, filename + '.sig')
+        signature_file_path = os.path.join(res_folder, filename + '.key')
 
         with open(encrypted_file_path, 'wb') as f:
             f.write(file)
@@ -118,14 +116,13 @@ def verify_signature():
 
         file1 = request.files['file1'].read()
         file2 = request.files['file2'].read()
-        print('2')
         public_key_pem = request.form['publicKey']
-        print('3')
+        # print('3')
 
         public_key = RSA.import_key(public_key_pem)
-        print('4')
+        # print('4')
         hashed = SHA3_256.new(file1)
-        print('5')
+        # print('5')
 
         # if(pkcs1_15.new(public_key).verify(hashed, file2)):
         #     print('asdas')

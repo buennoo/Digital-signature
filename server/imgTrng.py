@@ -1,5 +1,5 @@
 import numpy as np
-import io
+# import io
 import hashlib
 
 class TRNG:

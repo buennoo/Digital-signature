@@ -58,7 +58,7 @@ function KeyLabel({ setFetchKey, generatedKey, generatedLoad }){
 
   useEffect(() => {
     setKey(generatedKey);
-    console.log("passing last:", generatedKey);
+    console.log("passing last key:", generatedKey);
   }, [generatedKey]);
 
   useEffect(() => {
