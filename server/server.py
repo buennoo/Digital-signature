@@ -23,20 +23,12 @@ app.config['RES_FOLDER'] = 'res'
 async def publickey():
     print("public key")
     try:
-        # loop = asyncio.get_event_loop()
         result = await generate_keypair()
         private_key = result
         public_key = result.publickey().export_key().decode('ascii')
         return jsonify({"public_key": public_key})
     except Exception as e:
-        # if 'There is no current event loop in thread' in str(e):
-        #     loop = asyncio.new_event_loop()
-        #     asyncio.set_event_loop(loop)
-        # else:
-        #     raise
         return jsonify({'error': str(e)}), 500
-
-    # result = loop.run_until_complete(generate_keypair())
     # public_key = result.publickey().export_key().decode() #.splitlines()
     # public_key = "\n".join(public_key[1:-1])
 
@@ -75,7 +67,7 @@ async def encrypt():
 
         public_key_pem = public_key.export_key().decode('ascii')
 
-        # Save file + signature on server
+        # save file + signature on server
         filename = secure_filename(request.files['file'].filename)
         res_folder = app.config['RES_FOLDER']
         if not os.path.exists(res_folder):
@@ -101,13 +93,6 @@ async def encrypt():
 
 @app.route('/download-folder', methods=['GET'])
 def download_folder():
-    # try:
-    #     res_folder = app.config['RES_FOLDER']
-    #     zip_file_path = os.path.join(res_folder, 'res_files.zip')
-    #     shutil.make_archive(os.path.splitext(zip_file_path)[0], 'zip', res_folder)
-    #     return send_file(zip_file_path, as_attachment=True)
-    # except Exception as e:
-    #     return jsonify({'error': str(e)}), 500
     try:
         res_folder = app.config['RES_FOLDER']
 
