@@ -20,22 +20,26 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['RES_FOLDER'] = 'res'
 
 @app.route("/publickey", methods=['GET'])
-@cross_origin()
-def publickey():
+async def publickey():
     print("public key")
     try:
-        loop = asyncio.get_event_loop()
-    except RuntimeError as e:
-        if 'There is no current event loop in thread' in str(e):
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-        else:
-            raise
+        # loop = asyncio.get_event_loop()
+        result = await generate_keypair()
+        private_key = result
+        public_key = result.publickey().export_key().decode('ascii')
+        return jsonify({"public_key": public_key})
+    except Exception as e:
+        # if 'There is no current event loop in thread' in str(e):
+        #     loop = asyncio.new_event_loop()
+        #     asyncio.set_event_loop(loop)
+        # else:
+        #     raise
+        return jsonify({'error': str(e)}), 500
 
-    result = loop.run_until_complete(generate_keypair())
-    public_key = result.publickey().export_key().decode() #.splitlines()
+    # result = loop.run_until_complete(generate_keypair())
+    # public_key = result.publickey().export_key().decode() #.splitlines()
     # public_key = "\n".join(public_key[1:-1])
-    return jsonify({"public_key": public_key})
+
 
 # @app.route("/privatekey", methods=['GET'])
 # @cross_origin()
