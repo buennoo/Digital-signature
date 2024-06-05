@@ -7,19 +7,17 @@ from Crypto.Hash import SHA3_256
 from Crypto.Signature import pkcs1_15
 import os
 from werkzeug.utils import secure_filename
-import shutil
+# import shutil
 from Crypto.PublicKey import RSA
+
+from io import BytesIO
+import zipfile
 
 
 app = Flask(__name__)
 cros = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['RES_FOLDER'] = 'res'
-
-# @app.route("/hello", methods=['GET'])
-# @cross_origin()
-# def hello():
-#     return {"hello": ["test", "flask"]}
 
 @app.route("/publickey", methods=['GET'])
 @cross_origin()
@@ -99,12 +97,35 @@ async def encrypt():
 
 @app.route('/download-folder', methods=['GET'])
 def download_folder():
+    # try:
+    #     res_folder = app.config['RES_FOLDER']
+    #     zip_file_path = os.path.join(res_folder, 'res_files.zip')
+    #     shutil.make_archive(os.path.splitext(zip_file_path)[0], 'zip', res_folder)
+    #     return send_file(zip_file_path, as_attachment=True)
+    # except Exception as e:
+    #     return jsonify({'error': str(e)}), 500
     try:
         res_folder = app.config['RES_FOLDER']
-        zip_file_path = os.path.join(res_folder, 'res_files.zip')
-        shutil.make_archive(os.path.splitext(zip_file_path)[0], 'zip', res_folder)
-        return send_file(zip_file_path, as_attachment=True)
+
+        if not os.path.exists(res_folder):
+            raise FileNotFoundError(f"Folder {res_folder} does not exist")
+
+        memory_file = BytesIO()
+
+        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for root, dirs, files in os.walk(res_folder):
+                for file in files:
+                    file_path = os.path.join(root, file)
+                    arcname = os.path.relpath(file_path, res_folder)
+                    zf.write(file_path, arcname)
+
+        # memory pointer to the beggining
+        memory_file.seek(0)
+
+        return send_file(memory_file, download_name='res_files.zip', as_attachment=True)
+
     except Exception as e:
+        app.logger.error(f"Error occurred: {e}")
         return jsonify({'error': str(e)}), 500
 
 
