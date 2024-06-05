@@ -1,6 +1,6 @@
 # Digital-signature
 Demonstration of random number generator in data security with the RSA algorithm.<br>
-Contents:
+Content:
 - [Technologies](#technologies)
 - [API Endpoints](#api-endpoints)
 - [Functionality](#functionality)
